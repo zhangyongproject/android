@@ -1,0 +1,6 @@
+package com.cyjh.screenmirror;
+
+public interface VirtualDisplay {
+
+	public void release();
+}

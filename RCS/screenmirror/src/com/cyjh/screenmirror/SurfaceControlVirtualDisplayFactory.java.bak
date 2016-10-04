@@ -1,0 +1,110 @@
+package com.cyjh.screenmirror;
+
+import java.lang.reflect.Method;
+
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.os.Handler;
+import android.view.Surface;
+import android.os.IBinder;
+import android.view.WindowManager;
+
+
+public class SurfaceControlVirtualDisplayFactory implements VirtualDisplayFactory {
+
+	public final static String LOG_TAG = "MirrorDisplay";
+	
+	Point displaySize;
+	Rect displayRect;
+	
+	public SurfaceControlVirtualDisplayFactory() {
+		displaySize = getCurrentDisplaySize();
+	}
+	
+	public static Point getCurrentDisplaySize() {
+		return getCurrentDisplaySize(true);
+	}
+	
+	public static Point getCurrentDisplaySize(boolean rot) {
+		
+		
+		return new Point();
+	}
+	
+	public VirtualDisplay createVirtualDisplay(String name, int width, int height, int dpi, int flags, Surface surface, Handler handler) {
+		try {
+			Class<?> surfaceControlClass = Class.forName("android.view.SurfaceControl");
+			Method createDisplayMethod = surfaceControlClass.getDeclaredMethod("createDisplay", 
+					new Class<?>[]{String.class,Boolean.TYPE});
+			IBinder token = (IBinder)createDisplayMethod.invoke(null, new Object[]{name, 0});
+			
+			Method setDisplaySurfaceMethod = surfaceControlClass.getDeclaredMethod("setDisplaySurface", 
+					new Class<?>[]{IBinder.class, Surface.class});
+			Method setDisplayProjectionMethod = surfaceControlClass.getDeclaredMethod("setDisplayProjectionMethod",
+					new Class<?>[]{IBinder.class, Integer.TYPE, Rect.class, Rect.class});
+			Method setDisplayLayerStackMethod = surfaceControlClass.getDeclaredMethod("setDisplayLayerStack",
+					new Class<?>[]{IBinder.class, Integer.TYPE});
+			
+			Method openTransactionMethod = surfaceControlClass.getDeclaredMethod("openTransaction",
+					new Class[0]);
+			Method closeTransactionMethod = surfaceControlClass.getDeclaredMethod("closeTransaction", 
+					new Class[0]);
+			
+			Class<?>  serviceManagerClass = Class.forName("android.os.ServiceManager");
+			Method getServiceMethod = serviceManagerClass.getDeclaredMethod("getService", 
+					new Class<?>[]{String.class});
+			
+			displayRect = new Rect(0, 0, width, height);
+			Rect layerStackRect = new Rect(0, 0, displaySize.x, displaySize.y);
+			
+			openTransactionMethod.invoke(null, new Object[0]);
+			setDisplaySurfaceMethod.invoke(null, new Object[]{token, surface});
+			setDisplayProjectionMethod.invoke(null, new Object[]{token, Integer.valueOf(0), layerStackRect, displayRect});
+			setDisplayLayerStackMethod.invoke(null, new Object[]{token, Integer.valueOf(0)});
+			closeTransactionMethod.invoke(null, new Object[0]);
+			
+			Method destroyDisplayMethod = surfaceControlClass.getDeclaredMethod("destoryDisplay", new Class[]{IBinder.class});
+			
+			class SurfaceControlVirtualDisplay implements VirtualDisplay {
+				private Method closeTransactionMethod;
+				private Method destroyDisplayMethod;
+				private Method getServiceMethod;
+				private Method openTransactionMethod;
+				private Method setDisplayProjectionMethod;
+				private IBinder token;
+				
+				public SurfaceControlVirtualDisplay(Method m1, Method m2, Method m3, IBinder ib, Method m4, Method m5) {
+					closeTransactionMethod = m1;
+					destroyDisplayMethod = m2;
+					getServiceMethod = m3;
+					token = ib;
+					openTransactionMethod = m4;
+					setDisplayProjectionMethod = m5;
+				}
+				
+				public void release() {}
+			}
+			return new SurfaceControlVirtualDisplay(closeTransactionMethod, destroyDisplayMethod, getServiceMethod,
+					token, openTransactionMethod, setDisplayProjectionMethod);
+			
+		}catch(ClassNotFoundException e) {
+			e.printStackTrace();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+		
+	}
+	
+	public Rect getDisplayRect() {
+		return displayRect;
+	}
+	
+	public Point getDisplaySize() {
+		return new Point(displaySize);
+	}
+	
+	public void release() {}
+
+}

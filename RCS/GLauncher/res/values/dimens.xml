@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="config_allAppsBatchSize">0</integer>
+
+    <dimen name="app_icon_size">72dp</dimen>
+    <dimen name="app_icon_width">72dp</dimen>
+    <dimen name="app_icon_height">72dp</dimen>
+    <dimen name="app_icon_margin_left">28dp</dimen>
+    <dimen name="app_icon_margin_top">56dp</dimen>
+</resources>

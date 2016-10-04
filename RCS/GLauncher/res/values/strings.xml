@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">GameLauncher</string>
+	<string name="not_found_app">找不到该应用</string>
+	<string name="start_app_error">启动应用出错</string>
+</resources>

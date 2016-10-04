@@ -1,0 +1,13 @@
+eclipse.preferences.version=1
+encoding//src/com/buxiubianfu/IME/InputChangeManager.java=GBK
+encoding//src/com/buxiubianfu/IME/OpenApp.java=UTF-8
+encoding//src/com/buxiubianfu/IME/StartService.java=GBK
+encoding//src/com/buxiubianfu/IME/ToastUtil.java=UTF-8
+encoding//src/com/buxiubianfu/IME/Utils.java=GBK
+encoding//src/com/buxiubianfu/IME/command=GBK
+encoding//src/com/buxiubianfu/IME/command/BaseCommand.java=GBK
+encoding//src/com/buxiubianfu/IME/command/CommandConst.java=GBK
+encoding//src/com/buxiubianfu/IME/command/GetUpdateInfoCommand.java=UTF-8
+encoding//src/com/buxiubianfu/IME/command/SendJsonCommand.java=GBK
+encoding//src/com/buxiubianfu/IME/command/SetInputCommand.java=GBK
+encoding//src/com/buxiubianfu/IME/command/SpecialCommand.java=GBK

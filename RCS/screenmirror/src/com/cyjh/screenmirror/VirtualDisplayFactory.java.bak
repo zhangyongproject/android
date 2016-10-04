@@ -1,0 +1,9 @@
+package com.cyjh.screenmirror;
+
+import android.os.Handler;
+import android.view.Surface;
+
+public interface VirtualDisplayFactory {
+	public VirtualDisplay createVirtualDisplay(String name, int width, int height, int dpi, int flags, Surface surface, Handler handler);
+	public void release();
+}
